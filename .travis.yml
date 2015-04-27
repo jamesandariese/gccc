@@ -1,12 +1,9 @@
 language: c
 script:
- - "./test.sh"
- - "./test.sh -newgo"
-
+- "./test.sh"
+- "./test.sh -newgo"
 deploy:
   provider: releases
   api_key:
-    secure: Mti5GV6CwYlJ+llfPOryRa9hRL5Fkt/R4UahN63VayH0ljMn7/7fV/pYrVYjs2M36oz5NlLbPjdfjHlldPIxeG+3fkgdghy38fobLSKFPVP19nEM8MIWFq1VgTfEnCF0MmiHlZuIqto/m4Dc2Uunwona/Fp+FBLwQHSaKSlhqfk=
-  file: "gccc"
-  on:
-    tags: true
+    secure: "ToGV7VMPomMwoVj881k5sxH55dgUMGGAkeSN5e1hox9sKbL+cHGgI/deOV03j6vMNb5lrdr5rZ/gISSNzMa6sroKtptvuYlM12XUKladg+QDzEvQFhok0ORsQNayRUzt28+5Bq9kr2o5vVIFfhA2bXLBz6AnCfcPgEdCOa+aN/I="
+  file: gccc
