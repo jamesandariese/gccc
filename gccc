@@ -1,0 +1,94 @@
+#!/bin/sh
+
+if [ -e "$2" ];then
+    1>&2 echo "$2 exists"
+    exit 1
+fi
+
+if ! mkdir -p "$2" ;then
+    #mkdir will print its own error
+    exit 1
+fi
+
+SAVE_DIR="$PWD"
+
+cleanup() {
+    rm -rf "$SAVE_DIR/".gobuild.tmp.*
+    exit ${1:-1}
+}
+
+trap cleanup HUP INT TERM
+
+find_go() {
+    1>&2 echo "Testing your existing Go installation."
+    STUFF="`test_existing 2>&1`" && return 0
+    1>&2 echo "Existing bootstrap Go doesn't work ($STUFF)."
+    1>&2 echo "Downloading a new one."
+    download_new && return 0
+    return 1
+}
+
+
+test_existing() {
+if which go > /dev/null ;then
+    TMPDIR="`mktemp -d .gobuild.tmp.XXXXXXXX`"
+    cd "$TMPDIR"
+    cat > test.go << EOF
+package main
+import "os"
+func main() {
+	os.Exit(0)
+}
+EOF
+    go build -o t >/dev/null && [ -x t ] && ./t && return 0
+    cd ..
+fi
+    return 1
+}
+
+download_new() {
+    TMPDIR="`mktemp -d .gobuild.tmp.XXXXXXXX`"
+    cd "$TMPDIR"
+    case "`uname -a`" in
+    Linux*x86*)
+    	curl -s 'https://storage.googleapis.com/golang/go1.4.2.linux-386.tar.gz' | tar zx
+        ;;
+    Darwin*)
+	curl -s 'https://storage.googleapis.com/golang/go1.4.2.darwin-386-osx10.6.tar.gz' | tar zx
+        ;;
+    *)
+        1>&2 echo "No working go found and a precompiled one couldn't be automatically downloaded"
+        return 1
+        ;;
+    esac
+    echo 'GOROOT="'"$PWD/go"'"'
+    cd ..
+    return 0
+}
+
+export GOOS="${1%/*}"
+export GOARCH="${1#*/}"
+
+build_cc() {
+    1>&2 echo "Building CC Go"
+    git clone -q https://go.googlesource.com/go "$1" || return 1
+    cd "$1"
+    git checkout -q go1.4.2 || return 1
+    cd src
+    ./make.bash || return 1
+    cd ..
+}
+
+BSGOENV="`find_go`"
+if [ $? -ne 0 ];then
+    1>&2 echo "No working go found and a precompiled one couldn't be automatically downloaded"
+    exit 1
+fi
+
+build_cc "$2" >/dev/null || cleanup
+
+export GOROOT="$PWD"
+echo 'export PATH="'"$PWD/bin"':$PATH"'
+bin/go env | sed -e 's/^/export /'
+
+cleanup 0
