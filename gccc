@@ -66,9 +66,6 @@ download_new() {
     return 0
 }
 
-export GOOS="${1%/*}"
-export GOARCH="${1#*/}"
-
 build_cc() {
     1>&2 echo "Building CC Go"
     git clone -q https://go.googlesource.com/go "$1" || return 1
@@ -84,6 +81,9 @@ if [ $? -ne 0 ];then
     1>&2 echo "No working go found and a precompiled one couldn't be automatically downloaded"
     exit 1
 fi
+
+export GOOS="${1%/*}"
+export GOARCH="${1#*/}"
 
 build_cc "$2" >/dev/null || cleanup
 
