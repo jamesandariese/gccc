@@ -12,12 +12,12 @@ fi
 
 SAVE_DIR="$PWD"
 
-cleanup() {
+die() {
     rm -rf "$SAVE_DIR/".gobuild.tmp.*
     exit ${1:-1}
 }
 
-trap cleanup HUP INT TERM
+trap die HUP INT TERM
 
 find_go() {
     1>&2 echo "Testing your existing Go installation."
@@ -85,10 +85,10 @@ fi
 export GOOS="${1%/*}"
 export GOARCH="${1#*/}"
 
-build_cc "$2" >/dev/null || cleanup
+build_cc "$2" >/dev/null || die
 
 export GOROOT="$PWD"
 echo 'export PATH="'"$PWD/bin"':$PATH"'
 bin/go env | sed -e 's/^/export /'
 
-cleanup 0
+die 0
