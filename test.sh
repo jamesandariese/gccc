@@ -24,6 +24,7 @@ NEWENV="`../gccc windows/amd64 blorp`"
 if [ $? -ne 0 ];then
     exit 1
 fi
+eval "$NEWENV"
 
 go build
 grep 'This program cannot be run in DOS mode' test.exe || exit 1
