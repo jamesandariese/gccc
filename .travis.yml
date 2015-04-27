@@ -7,3 +7,5 @@ deploy:
   api_key:
     secure: "ToGV7VMPomMwoVj881k5sxH55dgUMGGAkeSN5e1hox9sKbL+cHGgI/deOV03j6vMNb5lrdr5rZ/gISSNzMa6sroKtptvuYlM12XUKladg+QDzEvQFhok0ORsQNayRUzt28+5Bq9kr2o5vVIFfhA2bXLBz6AnCfcPgEdCOa+aN/I="
   file: gccc
+  on:
+    tags: true
