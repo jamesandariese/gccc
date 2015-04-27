@@ -1,5 +1,11 @@
-language: c
-script: "./test.sh"
+language: go
+
+go:
+ - 1.4
+ 
+script:
+ - "./test.sh"
+ - "./test.sh -newgo"
 
 deploy:
   provider: releases
