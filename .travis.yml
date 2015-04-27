@@ -1,5 +1,7 @@
 language: c
-script: "./test.sh"
+script:
+ - "./test.sh"
+ - "./test.sh -newgo"
 
 deploy:
   provider: releases
