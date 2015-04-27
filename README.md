@@ -3,10 +3,18 @@ gccc
 
 A Go Cross Compiler Compiler
 
+##INSTALLATION
+
+GCCC is a shell script which can be run in place.
+
+It should be downloaded from https://github.com/jamesandariese/gccc/releases to the directory where you'll be running it.
+
 ##USAGE
 
 Inside a project you wish to build:
 
+    wget <RELEASE URL>
+    chmod +x gccc
     eval `./gccc darwin/amd64 darwingocc`
     go build
 
